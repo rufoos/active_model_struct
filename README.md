@@ -1,8 +1,6 @@
 # ActiveModelStruct
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/active_model_struct`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Serializer for ActiveModel based on Ruby OpenStruct standard library.
 
 ## Installation
 
@@ -22,7 +20,46 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Grape
+
+```ruby
+class API < Grape::API
+  formatter :json, ActiveModelStruct::Formatter
+  
+  namespace :users do
+    desc 'Get Users'
+    get :users, each_serializer: UserSerializer do
+      User.all
+    end
+    
+    desc 'Get User by ID'
+    get 'users/:id', serializer: UserSerializer do
+      User.find(params[:id])
+    end
+    
+    desc 'Update User'
+    params do
+      requires :username, type: String
+    end
+    patch 'users/:id' do
+      User.find(params[:id]).update(declared(params))
+    end
+    
+    desc 'Create User'
+    params do
+      requires :username, type: String
+      requires :password, type: String
+    end
+    post :users do
+      user = User.create(declared(params))
+      
+      # you can pass which fields should be serialized
+      # with UserSerializer in param :fields 
+      render user, fields: [:id, :username]
+    end
+  end
+end
+```
 
 ## Development
 
@@ -32,7 +69,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/active_model_struct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rufoos/active_model_struct.
 
 ## License
 
