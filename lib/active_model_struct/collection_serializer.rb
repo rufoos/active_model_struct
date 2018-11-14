@@ -11,7 +11,7 @@ module ActiveModelStruct
     end
 
     def to_json
-      Oj.dump(collect_data.collect(&:as_json))
+      Oj.dump(collect_data.collect(&:as_json), mode: :compat)
     end
 
     def serializer_class
