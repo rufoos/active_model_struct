@@ -36,7 +36,7 @@ module ActiveModelStruct
     end
 
     def to_json
-      MultiJson.dump(data)
+      Oj.dump(data, mode: :compat)
     end
 
     def exec_expr?(options)
