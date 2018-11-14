@@ -10,7 +10,7 @@ module ActiveModelStruct
         elsif defined?(Grape)
           Grape::Formatter::Json.call(resource, env)
         else
-          Oj.dump(resource)
+          MultiJson.dump(resource)
         end
       end
 

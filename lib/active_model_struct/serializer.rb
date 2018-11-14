@@ -32,11 +32,11 @@ module ActiveModelStruct
     end
 
     def as_json
-      stringify_keys!(data)
+      data
     end
 
     def to_json
-      Oj.dump(stringify_keys!(data))
+      MultiJson.dump(data)
     end
 
     def exec_expr?(options)
@@ -72,13 +72,6 @@ module ActiveModelStruct
           @data[key] = self.respond_to?(attr) ? self.try(attr) : object.try(attr)
         end
       end
-    end
-
-    def stringify_keys!(hash)
-      hash.keys.each do |key|
-        hash[key.to_s] = hash.delete(key)
-      end
-      hash
     end
   end
 end
